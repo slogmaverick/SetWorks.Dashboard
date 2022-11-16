@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F8AE3A98-4844-48E5-8CD7-2C2263906B71}"
 	ProjectSection(SolutionItems) = preProject
 		git.ignore = git.ignore
+		SetWorks.Dashboard\SetWorks.Dashboard\readme.md = SetWorks.Dashboard\SetWorks.Dashboard\readme.md
 	EndProjectSection
 EndProject
 Global

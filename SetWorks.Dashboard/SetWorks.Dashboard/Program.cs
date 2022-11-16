@@ -1,6 +1,7 @@
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using SetWorks.Dashboard.EF;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient();
+
+
+//Note that CovidDataService_File can't be added as a Singleton.  
+// It uses NavigationManager which doesn't exist yet.  
+//Get the covid data from our local file.  (still uses HttpClient)
+builder.Services.AddScoped<ICovidDataService, CovidDataService_File>();
+
+//Get the covid data from the feds.  (takes longer)
+//builder.Services.AddSingleton<ICovidDataService, CovidDataService_Feds>();
+
+//Add the EF repo.
+builder.Services.AddScoped<ICovidRepository, CovidRepository>();
 
 AddBlazorise(builder.Services);
 
