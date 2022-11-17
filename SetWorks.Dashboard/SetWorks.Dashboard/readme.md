@@ -1,31 +1,33 @@
 ﻿
-Quick & Dirty MVP
-Simple, get the core stuff using HttpClient calls to get data and populate the UI.
-(Check in)
+Quick & Dirty MVP \
+Simple, get the core stuff using HttpClient calls to get data and populate the UI. \
+(Check in) \
 
 Prettier MVP
-Add some v2 features and make it look a little prettier.  
-Make sure that it is accessible.  
-(Check in)
+Add some v2 features and make it look a little prettier.  \
+Make sure that it is accessible.  \
+(Check in) \
 
-EF Core MVP
-Plug in the EF Core functionality, ya wanna get hired don't you?
-(Check in)
+EF Core MVP \
+Plug in the EF Core functionality, ya wanna get hired don't you? \
+(Check in) \
 
-Thoughts MVP
-Write up a short manifesto about all of this.  
+Thoughts MVP \
+Write up a short manifesto about all of this.  \
 
 
-Notes
-Not sure where shared classes, etc., work for Domain Driven Design.  I have fear that DDD just abstracts things out 10 layers.  
+Notes \
+- Not sure where shared classes, etc., work for Domain Driven Design.  I have fear that DDD just abstracts things out 10 layers.  
 
-Add an API layer to manage state and data.  Use gRPC for this, lol.
+- Add an API layer to manage state and data.  Use gRPC for this, lol. 
 
-_Layout.cshtml has two links to third party hosted CSS files.  NEVER do this in real life.
+- _Layout.cshtml has two links to third party hosted CSS files.  NEVER do this in real life.
 
-? How to ensure that accessibility features are part of the components?  Did MSFT or Blazorise build them in?
+- ? How to ensure that accessibility features are part of the components?  Did MSFT or Blazorise build them in?
 
-bug - User can select ALL along with other states.  
+- bug - User can select ALL along with other states.  
+
+- Did NOT implement any state features.  If you go to another page and then back, the filters reset to the default.  
 
 
 Assignment

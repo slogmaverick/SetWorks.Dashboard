@@ -12,6 +12,9 @@ namespace SetWorks.Dashboard.EF
         public CovidRepository(ICovidDataService svc)
         {
             this.svc = svc;
+            //If this code is used, the app will hang with no exceptions thrown.  
+            //  Leaving it here to troubleshoot late.  
+
             //using (var context = new ApiContext())
             //{
             //    var data = svc.GetAllData().Result;

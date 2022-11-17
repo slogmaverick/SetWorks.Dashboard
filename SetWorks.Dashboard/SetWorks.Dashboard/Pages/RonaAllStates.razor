@@ -3,16 +3,12 @@
 @using System.Text.Json.Serialization
 @using SetWorks.Dashboard.EF
 
-@inject IHttpClientFactory ClientFactory
-@inject HttpClient Http
-@inject NavigationManager NavigationManager 
-@inject ICovidDataService CovidDataService
 @inject ICovidRepository CovidRepository
 
 <h2>Covid Cases - Current & Historical</h2>
 
 
-@if (getBranchesError)
+@if (getDataError)
 {
     <p>Unable to get Covid data from the feds. Please try again later.</p>
 }
@@ -22,7 +18,6 @@ else
     <DataGrid TItem="RonaStateSummary"
               Data="@filteredData"
               Filterable=true
-              FilterMethod="DataGridFilterMethod.StartsWith"
               ShowPager=true
               ShowPageSizes=false
               Editable=false
@@ -46,7 +41,6 @@ else
         <DataGridColumn Field="@nameof(RonaStateSummary.State)" Caption="State">
             <FilterTemplate>
                             @{
-                                var selectedValue = @context.SearchValue ?? "*";
                                 <Select TValue="string" SelectedValues="@filteredStates" TValue="string" 
                                         Multiple="true" SelectedValuesChanged="(e => StatesSelectedEventHandler(e))" MaxVisibleItems="4"  >
                                     <SelectItem Value="@("*")">All</SelectItem>
@@ -78,20 +72,28 @@ else
 @code {
     private IEnumerable<RonaStateSummary> filteredData = Array.Empty<RonaStateSummary>();
     private IEnumerable<RonaStateSummary> allData = Array.Empty<RonaStateSummary>();
-    private bool getBranchesError;
+    private bool getDataError;
     private bool shouldRender;
-    //private DateTime defaultDateFilter = new DateTime(2021, 3, 7);
-    // private List<string> defaultStatesSelected = new List<string> { "*" };
     private DatePicker<DateTime?> datePicker;
 
     private List<string> filteredStates = new List<string>();
     private List<DateTime?> filteredDates = new List<DateTime?>();
 
+    #region Overrides
+    #endregion
     protected override bool ShouldRender() => shouldRender;
 
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        InitializeFilters();
+        return base.OnAfterRenderAsync(firstRender);
+    }
     protected override async Task OnInitializedAsync()
     {
-        //var data = await CovidDataService.GetAllData();
+        //For some reason page will throw an exception on second load.  This line fixes it.  4
+        //  am assuming it's a Blazorise lifecycle issue.  
+        this.datePicker = new DatePicker<DateTime?>();
+
         var data = await CovidRepository.GetAllData();
         if (data.Count > 0)
         {
@@ -102,44 +104,19 @@ else
         }
         else
         {
-            getBranchesError = true;
+            getDataError = true;
         }
 
         shouldRender = true;
-
-
-        //var url = "https://api.covidtracking.com/v1/states/current.json";
-        //url = "test-data/allstates.json";
-        //var request = new HttpRequestMessage(HttpMethod.Get,
-        //    url);
-
-
-        //var client = ClientFactory.CreateClient();
-        //client.BaseAddress = new Uri(NavigationManager.BaseUri);
-
-        //var response = await client.SendAsync(request);
-
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    var options = new JsonSerializerOptions { WriteIndented = true };
-        //    using var responseStream = await response.Content.ReadAsStreamAsync();
-        //    filteredData = await JsonSerializer.DeserializeAsync
-        //        <IEnumerable<RonaStateSummary>>(responseStream);
-        //    allData = filteredData;
-
-        //    InitializeFilters();
-        //}
-        //else
-        //{
-        //    getBranchesError = true;
-        //}
-
-
-
     }
 
+    #region Private Methods
+    #endregion
     private void InitializeFilters()
     {
+        filteredDates.Clear();
+        filteredStates.Clear();
+
         //Setup the DatePicker UI
         var maxDate = allData.Select(rd => rd.Date).Max();
         this.datePicker.Min = allData.Select(rd => rd.Date).Min();
@@ -154,21 +131,6 @@ else
         FilterData();
 
     }
-
-    private void StatesSelectedEventHandler(IReadOnlyList<string> vals)
-    {
-        //filteredData = Array.Empty<RonaStateSummary>();
-        //if (vals.Count == 1 && vals[0] == "*") filteredData = allData;
-        this.filteredStates = vals.ToList();
-        FilterData();
-    }
-    private void DatesSelectedEventHandler(IReadOnlyList<DateTime?> vals)
-    {
-        //if (vals.Count < 2) return;
-        this.filteredDates = vals.ToList();
-        FilterData();
-    }
-
     private void FilterData()
     {
         //At this point it assumes that we have good data.  
@@ -195,6 +157,22 @@ else
         }
         filteredData = filtered;
 
+    }
+
+    #region Event Handlers
+    #endregion
+    private void StatesSelectedEventHandler(IReadOnlyList<string> vals)
+    {
+        //filteredData = Array.Empty<RonaStateSummary>();
+        //if (vals.Count == 1 && vals[0] == "*") filteredData = allData;
+        this.filteredStates = vals.ToList();
+        FilterData();
+    }
+    private void DatesSelectedEventHandler(IReadOnlyList<DateTime?> vals)
+    {
+        //if (vals.Count < 2) return;
+        this.filteredDates = vals.ToList();
+        FilterData();
     }
 
 

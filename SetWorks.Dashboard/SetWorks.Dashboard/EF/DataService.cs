@@ -5,8 +5,6 @@ namespace SetWorks.Dashboard.EF
 {
     public interface ICovidDataService
     {
-        //Gotta be a better way to get the BaseAddress.  
-        //Can't use NavManager as a dependency on class instantiation, it doesn't exist yet.  
         public Task<List<RonaStateSummary>> GetAllData();
     }
     class Helper

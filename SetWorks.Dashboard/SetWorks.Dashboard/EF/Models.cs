@@ -53,6 +53,7 @@ namespace SetWorks.Dashboard.EF
 
     }
 
+    //Many ways to do this.  This is the path I have chosen.  
     public class DateTimeJsonConverter : JsonConverter<DateTime>
     {
         public override DateTime Read(
@@ -68,18 +69,5 @@ namespace SetWorks.Dashboard.EF
             JsonSerializerOptions options) =>
                 writer.WriteStringValue(dateTimeValue.ToString(
                     "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture));
-        //public override DateTimeOffset Read(
-        //    ref Utf8JsonReader reader,
-        //    Type typeToConvert,
-        //    JsonSerializerOptions options) =>
-        //        DateTimeOffset.ParseExact(reader.GetString()!,
-        //            "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
-
-        //public override void Write(
-        //    Utf8JsonWriter writer,
-        //    DateTimeOffset dateTimeValue,
-        //    JsonSerializerOptions options) =>
-        //        writer.WriteStringValue(dateTimeValue.ToString(
-        //            "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture));
     }
 }
